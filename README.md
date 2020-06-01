@@ -18,7 +18,7 @@ A Simple iOS Application Demonstrating Usage of GitHub API
 
 ## 3. Important Notes:
 * This application requires a GitHub access token to access GitHub data, or you will only have a limited quota. Please follow the following steps to add a token to this application:
-  1. [Follow this Guide to create a personal access token] (https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line)
+  1. [Follow this Guide to create a personal access token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line)
   2. Open GitHubSearcher/Constants
   3. Inside Environment, on line 11 `static let apiToken = "token {GitHub Token}"`, replace `{GitHub Token}` with your actual GitHub token
   4. Compile and run the application.
