@@ -11,7 +11,7 @@ A Simple iOS Application Demonstrating Usage of GitHub API
 * There are two screen built in this application:
    1. Searcher Screen: On this screen, you can type in the searchbar and search for users on GitHub based on their username. Type on one of the cell in the result will bring you to the User Detail Screen.
    2. User Detail Screen: This screen shows the detailed info about the specific user you choose.
-* On the backend, this application uses URLSession to deal with all the network tasks and promptly updates the UI on the main thread.
+* On the backend, this application uses URLSession to deal with all the network tasks and promptly caches the avatar images and updates the UI.
 
 ## 2. Possible Improments:
 * Implement in-app authentication to authenticate the user to use the GitHub API.
