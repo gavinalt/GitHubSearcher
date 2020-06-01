@@ -34,7 +34,6 @@ class SearcherViewController: UIViewController {
         searchController.delegate = self
         searchController.searchResultsUpdater = self
         searchController.searchBar.autocapitalizationType = .none
-        searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = searchFieldPlaceHolder
 
@@ -70,7 +69,7 @@ extension SearcherViewController: UISearchResultsUpdating {
 
         queryService.getSearchResults(searchTerm: strippedString) { (queryResponse, errorMsg) in
             if errorMsg != "" {
-                print(errorMsg)
+//                print(errorMsg)
             }
 
             if let response = queryResponse,

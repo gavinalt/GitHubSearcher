@@ -7,7 +7,7 @@ class WebServices {
         
         let task = URLSession(configuration: .default).dataTask(with: url) { (data, response, error) in
             guard error == nil else {
-                print("error: \(String(describing: error))")
+//                print("error: \(String(describing: error))")
                 return closure(nil, false)
             }
             guard response != nil else {

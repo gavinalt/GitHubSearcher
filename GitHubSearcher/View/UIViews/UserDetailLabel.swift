@@ -9,6 +9,7 @@
 import UIKit
 
 class UserDetailLabel: UILabel {
+
     var prefix = ""
 
     override init(frame: CGRect) {

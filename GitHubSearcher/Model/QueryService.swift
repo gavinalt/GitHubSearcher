@@ -11,91 +11,62 @@ class QueryService {
 
     typealias QueryResult = (SearchQueryResponse?, String) -> Void
     func getSearchResults(searchTerm: String, completion: @escaping QueryResult) {
-        queryDataTask?.cancel()
+        cancelRunningTask(task: queryDataTask)
         if var urlComponents = URLComponents(string: ApiEndPts.userSearchUrl) {
             urlComponents.query = "q=\(searchTerm)"
             guard let url = urlComponents.url else { return }
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
 
-            request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
-            request.setValue("token 9e3dbc0a8683e63c7b809b1d40b5932ed45f1ed2", forHTTPHeaderField: "Authorization")
-            
-            queryDataTask = defaultSession.dataTask(with: request) { [weak self] data, response, error in
-                defer { self?.queryDataTask = nil }
-                
-                if let error = error {
-                    self?.errorMessage += "DataTask error: " + error.localizedDescription + "\n"
-                } else if let data = data,
-                    let response = response as? HTTPURLResponse,
-                    response.statusCode == 200 {
-//print(response.allHeaderFields["X-RateLimit-Remaining"])
-                    
-                    let response: SearchQueryResponse? = self?.decodeResponseData(data)
-                    DispatchQueue.main.async {
-                        completion(response, self?.errorMessage ?? "")
-                    }
-                }
-            }
-            
-            queryDataTask?.resume()
+            getResponseFromRequest(dataTaskRef: &queryDataTask, request: request, completion: completion)
         }
     }
 
     func getUserDetail(userId: String, completion: @escaping (UserDetail?, String) -> Void) {
+        cancelRunningTask(task: userDataTask)
         guard let url = URL(string: ApiEndPts.userUrl + userId) else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
 
-        request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
-        request.setValue("token 9e3dbc0a8683e63c7b809b1d40b5932ed45f1ed2", forHTTPHeaderField: "Authorization")
-
-        userDataTask = defaultSession.dataTask(with: request) { [weak self] data, response, error in
-            defer { self?.userDataTask = nil }
-
-            if let error = error {
-                self?.errorMessage += "DataTask error: " + error.localizedDescription + "\n"
-            } else if let data = data,
-                let response = response as? HTTPURLResponse,
-                response.statusCode == 200 {
-//                print(response.allHeaderFields["X-RateLimit-Remaining"])
-
-                let userDetail: UserDetail? = self?.decodeResponseData(data)
-                DispatchQueue.main.async {
-                    completion(userDetail, self?.errorMessage ?? "")
-                }
-            }
-        }
-
-        userDataTask?.resume()
+        getResponseFromRequest(dataTaskRef: &userDataTask, request: request, completion: completion)
     }
 
 
     func getUserRepos(userId: String, completion: @escaping ([Repo]?, String) -> Void) {
+        cancelRunningTask(task: repoDataTask)
         guard let url = URL(string: ApiEndPts.userUrl + userId + "/repos") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
 
-        request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
-        request.setValue("token 9e3dbc0a8683e63c7b809b1d40b5932ed45f1ed2", forHTTPHeaderField: "Authorization")
+        getResponseFromRequest(dataTaskRef: &repoDataTask, request: request, completion: completion)
+    }
 
-        repoDataTask = defaultSession.dataTask(with: request) { [weak self] data, response, error in
-            defer { self?.repoDataTask = nil }
+    private func cancelRunningTask(task: URLSessionDataTask?) {
+        if task?.state == .running {
+            task?.cancel()
+        }
+    }
 
+    private func getResponseFromRequest<T: Codable>(dataTaskRef: inout URLSessionDataTask?, request: URLRequest, completion: @escaping (T?, String) -> Void) {
+
+        var request = request
+        request.setValue(Environment.apiStandard, forHTTPHeaderField: "Accept")
+        request.setValue(Environment.getApiToken(), forHTTPHeaderField: "Authorization")
+
+        dataTaskRef = defaultSession.dataTask(with: request) { [weak self] data, response, error in
             if let error = error {
                 self?.errorMessage += "DataTask error: " + error.localizedDescription + "\n"
             } else if let data = data,
                 let response = response as? HTTPURLResponse,
                 response.statusCode == 200 {
 
-                let repos: [Repo]? = self?.decodeResponseData(data)
+                let parsedData: T? = self?.decodeResponseData(data)
                 DispatchQueue.main.async {
-                    completion(repos, self?.errorMessage ?? "")
+                    completion(parsedData, self?.errorMessage ?? "")
                 }
             }
         }
-
-        repoDataTask?.resume()
+        dataTaskRef?.resume()
     }
 
     private func decodeResponseData<T: Codable>(_ data: Data) -> T? {
