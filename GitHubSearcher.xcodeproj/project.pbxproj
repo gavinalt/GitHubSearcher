@@ -27,6 +27,7 @@
 		8611ECF82484A3DC007FCF27 /* UserDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8611ECF72484A3DB007FCF27 /* UserDetailViewModel.swift */; };
 		8611ECFA2484C58B007FCF27 /* Repo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8611ECF92484C58B007FCF27 /* Repo.swift */; };
 		8611ECFC2484DBD1007FCF27 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8611ECFB2484DBD1007FCF27 /* Constants.swift */; };
+		86E58C4D2485542B00EFB42C /* LocalCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E58C4B2485542B00EFB42C /* LocalCache.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		8611ECF72484A3DB007FCF27 /* UserDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailViewModel.swift; sourceTree = "<group>"; };
 		8611ECF92484C58B007FCF27 /* Repo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repo.swift; sourceTree = "<group>"; };
 		8611ECFB2484DBD1007FCF27 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		86E58C4B2485542B00EFB42C /* LocalCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalCache.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +138,7 @@
 				8611ECF92484C58B007FCF27 /* Repo.swift */,
 				860F9B72248427FA00A67618 /* WebServices.swift */,
 				860F9B73248427FA00A67618 /* QueryService.swift */,
+				86E58C4B2485542B00EFB42C /* LocalCache.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -276,6 +279,7 @@
 				860F9B7B24843E9900A67618 /* UserDetail.swift in Sources */,
 				860F9B4A248409DF00A67618 /* SearcherViewController.swift in Sources */,
 				8611ECF62484A1D8007FCF27 /* UserDetailLabel.swift in Sources */,
+				86E58C4D2485542B00EFB42C /* LocalCache.swift in Sources */,
 				860F9B7F24844DE600A67618 /* Avatar.swift in Sources */,
 				860F9B46248409DF00A67618 /* AppDelegate.swift in Sources */,
 				8611ECF424846A4A007FCF27 /* TableCellLabel.swift in Sources */,
