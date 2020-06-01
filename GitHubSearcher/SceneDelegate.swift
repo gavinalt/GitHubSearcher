@@ -1,11 +1,3 @@
-//
-//  SceneDelegate.swift
-//  GitHubSearcher
-//
-//  Created by Gavin Li on 5/31/20.
-//  Copyright © 2020 Gavin Li. All rights reserved.
-//
-
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {

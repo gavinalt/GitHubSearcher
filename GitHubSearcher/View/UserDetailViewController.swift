@@ -1,11 +1,3 @@
-//
-//  UserDetailViewController.swift
-//  GitHubSearcher
-//
-//  Created by Gavin Li on 5/31/20.
-//  Copyright © 2020 Gavin Li. All rights reserved.
-//
-
 import UIKit
 import SafariServices
 
@@ -40,17 +32,21 @@ class UserDetailViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
 
         queryService.getUserDetail(userId: userId) { [weak self] (userDetail, errorMsg) in
-            if let detail = userDetail {
-                self?.viewModel = UserDetailViewModel.init(userDetail: detail)
-                self?.setupSubview()
+            DispatchQueue.main.async {
+                if let detail = userDetail {
+                    self?.viewModel = UserDetailViewModel.init(userDetail: detail)
+                    self?.setupSubview()
+                }
             }
         }
 
         queryService.getUserRepos(userId: userId) { [weak self] (repoArray, errorMsg) in
-            if let repos = repoArray {
-                self?.allRepos = repos
-                self?.filteredRepos = repos
-                self?.repoTableView.reloadData()
+            DispatchQueue.main.async {
+                if let repos = repoArray {
+                    self?.allRepos = repos
+                    self?.filteredRepos = repos
+                    self?.repoTableView.reloadData()
+                }
             }
         }
     }

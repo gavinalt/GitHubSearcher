@@ -1,11 +1,3 @@
-//
-//  SearcherTableCell.swift
-//  GitHubSearcher
-//
-//  Created by Gavin Li on 5/31/20.
-//  Copyright © 2020 Gavin Li. All rights reserved.
-//
-
 import UIKit
 
 class SearcherTableCell: UITableViewCell {
@@ -64,8 +56,10 @@ class SearcherTableCell: UITableViewCell {
         avatar.startDownload(from: user.avatarUrl)
         userId.setText("\(user.userId)")
         queryService.getUserDetail(userId: user.userId) { [weak self] (userDetail, errorMsg) in
-            let count = userDetail?.repoCount ?? 0
-            self?.repoCount.setText("\(count)")
+            DispatchQueue.main.async {
+                let count = userDetail?.repoCount ?? 0
+                self?.repoCount.setText("\(count)")
+            }
         }
     }
 }

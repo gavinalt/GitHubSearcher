@@ -1,11 +1,3 @@
-//
-//  ViewController.swift
-//  GitHubSearcher
-//
-//  Created by Gavin Li on 5/31/20.
-//  Copyright © 2020 Gavin Li. All rights reserved.
-//
-
 import UIKit
 
 class SearcherViewController: UIViewController {
@@ -68,14 +60,16 @@ extension SearcherViewController: UISearchResultsUpdating {
             searchController.searchBar.text!.trimmingCharacters(in: whitespaceCharacterSet)
 
         queryService.getSearchResults(searchTerm: strippedString) { (queryResponse, errorMsg) in
-            if errorMsg != "" {
-//                print(errorMsg)
-            }
+            DispatchQueue.main.async {
+                if errorMsg != "" {
+                    //                print(errorMsg)
+                }
 
-            if let response = queryResponse,
-                let resultsController = searchController.searchResultsController as? ResultTableViewController {
-                resultsController.resultUsers = response.users
-                resultsController.tableView.reloadData()
+                if let response = queryResponse,
+                    let resultsController = searchController.searchResultsController as? ResultTableViewController {
+                    resultsController.resultUsers = response.users
+                    resultsController.tableView.reloadData()
+                }
             }
         }
     }

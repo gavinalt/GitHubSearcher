@@ -1,11 +1,3 @@
-//
-//  Avatar.swift
-//  GitHubSearcher
-//
-//  Created by Gavin Li on 5/31/20.
-//  Copyright © 2020 Gavin Li. All rights reserved.
-//
-
 import UIKit
 
 class Avatar: UIImageView {
@@ -34,9 +26,10 @@ class Avatar: UIImageView {
     }
 
     func startDownload(from url: String?) {
-        if let url = url {
-            WebServices.getImageFromWeb(url) { [weak self] (image, success) in
-                if success {
+        guard let url = url else { return }
+        WebServices.getImageFromWeb(url) { [weak self] (image) in
+            DispatchQueue.main.async {
+                if let image = image {
                     self?.image = image
                 } else {
                     self?.image = self?.placeholder

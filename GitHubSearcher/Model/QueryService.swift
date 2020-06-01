@@ -11,14 +11,14 @@ class QueryService {
 
     typealias QueryResult = (SearchQueryResponse?, String) -> Void
     func getSearchResults(searchTerm: String, completion: @escaping QueryResult) {
+        guard searchTerm.isEmpty == false else { return }
         cancelRunningTask(task: queryDataTask)
         if var urlComponents = URLComponents(string: ApiEndPts.userSearchUrl) {
             urlComponents.query = "q=\(searchTerm)"
             guard let url = urlComponents.url else { return }
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
-
-            getResponseFromRequest(dataTaskRef: &queryDataTask, request: request, completion: completion)
+            self.queryDataTask = getResponseFromRequest(request: request, completion: completion)
         }
     }
 
@@ -27,8 +27,7 @@ class QueryService {
         guard let url = URL(string: ApiEndPts.userUrl + userId) else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-
-        getResponseFromRequest(dataTaskRef: &userDataTask, request: request, completion: completion)
+        self.userDataTask = getResponseFromRequest(request: request, completion: completion)
     }
 
 
@@ -37,8 +36,7 @@ class QueryService {
         guard let url = URL(string: ApiEndPts.userUrl + userId + "/repos") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-
-        getResponseFromRequest(dataTaskRef: &repoDataTask, request: request, completion: completion)
+        self.repoDataTask = getResponseFromRequest(request: request, completion: completion)
     }
 
     private func cancelRunningTask(task: URLSessionDataTask?) {
@@ -47,13 +45,13 @@ class QueryService {
         }
     }
 
-    private func getResponseFromRequest<T: Codable>(dataTaskRef: inout URLSessionDataTask?, request: URLRequest, completion: @escaping (T?, String) -> Void) {
+    private func getResponseFromRequest<T: Codable>(request: URLRequest, completion: @escaping (T?, String) -> Void) -> URLSessionDataTask {
 
         var request = request
         request.setValue(Environment.apiStandard, forHTTPHeaderField: "Accept")
-        request.setValue(Environment.getApiToken(), forHTTPHeaderField: "Authorization")
+        request.setValue(Environment.apiToken, forHTTPHeaderField: "Authorization")
 
-        dataTaskRef = defaultSession.dataTask(with: request) { [weak self] data, response, error in
+        let task = defaultSession.dataTask(with: request) { [weak self] data, response, error in
             if let error = error {
                 self?.errorMessage += "DataTask error: " + error.localizedDescription + "\n"
             } else if let data = data,
@@ -61,12 +59,11 @@ class QueryService {
                 response.statusCode == 200 {
 
                 let parsedData: T? = self?.decodeResponseData(data)
-                DispatchQueue.main.async {
-                    completion(parsedData, self?.errorMessage ?? "")
-                }
+                completion(parsedData, self?.errorMessage ?? "")
             }
         }
-        dataTaskRef?.resume()
+        task.resume()
+        return task
     }
 
     private func decodeResponseData<T: Codable>(_ data: Data) -> T? {
